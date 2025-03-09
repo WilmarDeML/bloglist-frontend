@@ -16,6 +16,7 @@ const App = () => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
+      blogService.setToken(user.token)
       setUser(user)
     }
   }, [])
@@ -37,6 +38,7 @@ const App = () => {
       'loggedNoteappUser', JSON.stringify(user)
     )
 
+    blogService.setToken(user.token)
     setUser(user)
     setUsername('')
     setPassword('')
@@ -59,7 +61,7 @@ const App = () => {
   }
 
   return (
-    <BlogList blogs={blogs} name={user.name} logout={handleLogout} />
+    <BlogList blogs={blogs} name={user.name} logout={handleLogout} setBlogs={setBlogs} />
   )
 }
 
