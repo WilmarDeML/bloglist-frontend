@@ -1,6 +1,11 @@
-const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }) => (
+import Notification from "./Notification"
+
+const LoginForm = ({ handleLogin, username, setUsername, password, setPassword, error, notificationMessage }) => (
   <form onSubmit={handleLogin}>
     <h2>log in to application</h2>
+
+    <Notification message={notificationMessage} err={error} />
+    
     <div style={{display: 'flex', gap: .5 +'em'}}>
       <label htmlFor="username">username</label>
       <input
