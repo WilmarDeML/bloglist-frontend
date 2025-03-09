@@ -78,7 +78,7 @@ const App = () => {
 
   return (
     <BlogList logout={handleLogout} 
-      blogs={blogs} setBlogs={setBlogs}
+      blogs={blogs.sort((a, b) => b.likes - a.likes)} setBlogs={setBlogs}
       name={user.name}
       showNotification={showNotification}
       error={error}
