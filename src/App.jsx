@@ -37,11 +37,11 @@ const App = () => {
       const user = await loginService.login({
         username, password,
       })
-  
+
       window.localStorage.setItem(
         'loggedNoteappUser', JSON.stringify(user)
       )
-  
+
       blogService.setToken(user.token)
       setUser(user)
       setUsername('')
@@ -67,8 +67,8 @@ const App = () => {
 
   if (!user) {
     return (
-      <LoginForm handleLogin={handleLogin} 
-        username={username} setUsername={setUsername} 
+      <LoginForm handleLogin={handleLogin}
+        username={username} setUsername={setUsername}
         password={password} setPassword={setPassword}
         error={error}
         notificationMessage={notificationMessage}
@@ -77,7 +77,7 @@ const App = () => {
   }
 
   return (
-    <BlogList logout={handleLogout} 
+    <BlogList logout={handleLogout}
       blogs={blogs.sort((a, b) => b.likes - a.likes)} setBlogs={setBlogs}
       name={user.name}
       showNotification={showNotification}

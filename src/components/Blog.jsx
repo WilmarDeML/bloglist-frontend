@@ -1,10 +1,11 @@
 import { useState } from 'react'
+import PropTypes from 'prop-types'
 
 import blogService from '../services/blogs'
 
 const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
   const [isVisible, setIsVisible] = useState(false)
-  
+
   const user = JSON.parse(window.localStorage.getItem('loggedNoteappUser'))
 
   const showButtonRemove = { display: user.username === blog.user?.username ? '' : 'none' }
@@ -51,6 +52,13 @@ const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
 }
 
 export default Blog

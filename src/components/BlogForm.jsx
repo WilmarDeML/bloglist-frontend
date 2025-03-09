@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react'
+import PropTypes from 'prop-types'
 
 import blogService from '../services/blogs'
 
@@ -14,14 +15,14 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
 
   const handleBlogSubmit = async (event) => {
     event.preventDefault()
-    
+
     const blog = {
       title, author, url
     }
 
     try {
       const createdBlog = await blogService.create(blog)
-  
+
       noteFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(createdBlog))
@@ -40,7 +41,7 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
     <Togglable buttonLabel="new blog" ref={noteFormRef}>
       <form onSubmit={handleBlogSubmit}>
         <h2>create new</h2>
-        <div style={{display: 'flex', gap: .5 +'em'}}>
+        <div style={{ display: 'flex', gap: .5 +'em' }}>
           <label htmlFor="title">title</label>
           <input
             type="text"
@@ -49,8 +50,8 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
             onChange={({ target }) => setTitle(target.value)}
           />
         </div>
-        
-        <div style={{display: 'flex', gap: .5 +'em'}}>
+
+        <div style={{ display: 'flex', gap: .5 +'em' }}>
           <label htmlFor="author">author</label>
           <input
             type="text"
@@ -59,8 +60,8 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
             onChange={({ target }) => setAuthor(target.value)}
           />
         </div>
-        
-        <div style={{display: 'flex', gap: .5 +'em'}}>
+
+        <div style={{ display: 'flex', gap: .5 +'em' }}>
           <label htmlFor="url">url</label>
           <input
             type="text"
@@ -73,6 +74,12 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
       </form>
     </Togglable>
   )
+}
+
+BlogForm.propTypes = {
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  showNotification: PropTypes.func.isRequired,
 }
 
 export default BlogForm

@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
@@ -16,13 +17,23 @@ const BlogList = ({ logout, blogs, setBlogs, name, showNotification, error, noti
       <BlogForm blogs={blogs} setBlogs={setBlogs} showNotification={showNotification} />
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} 
-          blogs={blogs} setBlogs={setBlogs} 
+        <Blog key={blog.id} blog={blog}
+          blogs={blogs} setBlogs={setBlogs}
           showNotification={showNotification}
         />
       )}
     </div>
   )
+}
+
+BlogList.propTypes = {
+  logout: PropTypes.func.isRequired,
+  blogs: PropTypes.array.isRequired,
+  setBlogs: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  showNotification: PropTypes.func.isRequired,
+  error: PropTypes.bool,
+  notificationMessage: PropTypes.string,
 }
 
 export default BlogList
