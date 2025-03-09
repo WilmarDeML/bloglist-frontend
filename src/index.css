@@ -25,4 +25,9 @@
       background: lightgrey;
     }
   }
+
+  .button-remove {
+    background: cornflowerblue;
+    color: midnightblue;
+  }
 }
