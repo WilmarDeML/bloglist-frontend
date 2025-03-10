@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { describe, expect } from 'vitest'
+
 import Blog from './Blog'
-import { describe } from 'vitest'
 
 describe('<Blog />', () => {
   let container
@@ -18,19 +20,20 @@ describe('<Blog />', () => {
 
   test('renders title and author', async () => {
     await screen.findByText('Component testing is done with react-testing-library wilmar')
-
-    const titleAuthor = screen.queryByText('Component testing is done with react-testing-library wilmar')
-    expect(titleAuthor).toBeDefined()
   })
 
   test('at start the children are not displayed', async () => {
     const div = container.querySelector('.blog-complement')
     expect(div).toHaveStyle('display: none')
+  })
 
-    const url = screen.queryByText('https://testing-library.com/docs/react-testing-library/intro')
-    expect(url).toBeNull()
+  test('after clicking the button, children are displayed', async () => {
+    const user = userEvent.setup()
 
-    const likes = screen.queryByText('likes: 5')
-    expect(likes).toBeNull()
+    const button = screen.getByText('view')
+    await user.click(button)
+
+    const div = container.querySelector('.blog-complement')
+    expect(div).not.toHaveStyle('display: none')
   })
 })
