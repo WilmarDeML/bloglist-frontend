@@ -8,7 +8,7 @@ const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
 
   const user = JSON.parse(window.localStorage.getItem('loggedNoteappUser'))
 
-  const showButtonRemove = { display: user.username === blog.user?.username ? '' : 'none' }
+  const showButtonRemove = { display: user?.username === blog.user?.username ? '' : 'none' }
   const showWhenVisible = { display: isVisible ? '' : 'none' }
 
   const handleUpdateLikes = async () => {
@@ -44,7 +44,7 @@ const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
         {blog.title} {blog.author}
         <button onClick={() => setIsVisible(!isVisible)}>{isVisible ? 'hide' : 'view'}</button>
       </div>
-      <div style={showWhenVisible}>
+      <div style={showWhenVisible} className='blog-complement'>
         {blog.url} <br />
         likes: {blog.likes} <button onClick={handleUpdateLikes}>like</button> <br />
         {blog.user?.name ?? 'anonymous'} <br />
