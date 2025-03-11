@@ -65,6 +65,50 @@ const App = () => {
     setTimeout(() => setNotificationMessage(''), 5000)
   }
 
+  const handleCreateBlog = async (blog, noteFormRef) => {
+    try {
+      const createdBlog = await blogService.create(blog)
+
+      noteFormRef.current.toggleVisibility()
+
+      setBlogs(blogs.concat(createdBlog))
+      showNotification(`a new blog '${blog.title}' added`)
+      return true
+    } catch (error) {
+      const errorMessage = error.response?.data?.error ?? 'error saving the blog'
+      showNotification(errorMessage, error)
+      console.error(error.response?.data?.error ?? error.message)
+      return false
+    }
+  }
+
+  const handleUpdateLikes = async (blog) => {
+    try {
+      const updatedBlog = await blogService.update(blog.id, { likes: blog.likes + 1 })
+      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
+    } catch (error) {
+      const errorMessage = error.response?.data?.error ?? 'error updating likes'
+      showNotification(errorMessage, error)
+      console.error(error.response?.data?.error ?? error.message)
+    }
+  }
+
+  const handleRemoveBlog = async (blog) => {
+    if (!window.confirm(`remove blog '${blog.title}'?`)) {
+      return
+    }
+
+    try {
+      await blogService.remove(blog.id)
+      const updatedBlogs = blogs.filter(b => b.id !== blog.id)
+      setBlogs(updatedBlogs)
+    } catch (error) {
+      const errorMessage = error.response?.data?.error ?? 'error removing blog'
+      showNotification(errorMessage, error)
+      console.error(error.response?.data?.error ?? error.message)
+    }
+  }
+
   if (!user) {
     return (
       <LoginForm handleLogin={handleLogin}
@@ -77,12 +121,16 @@ const App = () => {
   }
 
   return (
-    <BlogList logout={handleLogout}
-      blogs={blogs.sort((a, b) => b.likes - a.likes)} setBlogs={setBlogs}
-      name={user.name}
-      showNotification={showNotification}
+    <BlogList blogs={blogs.sort((a, b) => b.likes - a.likes)}
+      createBlog={handleCreateBlog}
       error={error}
+      logout={handleLogout}
+      name={user.name}
       notificationMessage={notificationMessage}
+      removeBlog={handleRemoveBlog}
+      setBlogs={setBlogs}
+      showNotification={showNotification}
+      updateLikes={handleUpdateLikes}
     />
   )
 }

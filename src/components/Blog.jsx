@@ -1,42 +1,13 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
-import blogService from '../services/blogs'
-
-const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
+const Blog = ({ blog, handleUpdateLikes, handleRemoveBlog }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   const user = JSON.parse(window.localStorage.getItem('loggedNoteappUser'))
 
   const showButtonRemove = { display: user?.username === blog.user?.username ? '' : 'none' }
   const showWhenVisible = { display: isVisible ? '' : 'none' }
-
-  const handleUpdateLikes = async () => {
-    try {
-      const updatedBlog = await blogService.update(blog.id, { likes: blog.likes + 1 })
-      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error updating likes'
-      showNotification(errorMessage, error)
-      console.error(error.response?.data?.error ?? error.message)
-    }
-  }
-
-  const handleRemoveBlog = async () => {
-    if (!window.confirm(`remove blog '${blog.title}'?`)) {
-      return
-    }
-
-    try {
-      await blogService.remove(blog.id)
-      const updatedBlogs = blogs.filter(b => b.id !== blog.id)
-      setBlogs(updatedBlogs)
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error removing blog'
-      showNotification(errorMessage, error)
-      console.error(error.response?.data?.error ?? error.message)
-    }
-  }
 
   return (
     <div className="blog">
@@ -46,9 +17,9 @@ const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
       </div>
       <div style={showWhenVisible} className='blog-complement'>
         {blog.url} <br />
-        likes: {blog.likes} <button onClick={handleUpdateLikes}>like</button> <br />
+        likes: {blog.likes} <button onClick={() => handleUpdateLikes(blog)}>like</button> <br />
         {blog.user?.name ?? 'anonymous'} <br />
-        <button style={showButtonRemove} className='button-remove' onClick={handleRemoveBlog}>remove</button>
+        <button style={showButtonRemove} className='button-remove' onClick={() => handleRemoveBlog(blog)}>remove</button>
       </div>
     </div>
   )
@@ -56,9 +27,8 @@ const Blog = ({ blog, blogs, setBlogs, showNotification }) => {
 
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired,
+  handleUpdateLikes: PropTypes.func.isRequired,
+  handleRemoveBlog: PropTypes.func.isRequired,
 }
 
 export default Blog

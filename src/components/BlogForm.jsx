@@ -5,7 +5,7 @@ import blogService from '../services/blogs'
 
 import Togglable from './Togglable'
 
-const BlogForm = ({ blogs, setBlogs, showNotification }) => {
+const BlogForm = ({ handleCreateBlog }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -20,20 +20,10 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
       title, author, url
     }
 
-    try {
-      const createdBlog = await blogService.create(blog)
-
-      noteFormRef.current.toggleVisibility()
-
-      setBlogs(blogs.concat(createdBlog))
+    if (await handleCreateBlog(blog, noteFormRef)) {
       setTitle('')
       setAuthor('')
       setUrl('')
-      showNotification(`a new blog '${blog.title}' added`)
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error saving the blog'
-      showNotification(errorMessage, error)
-      console.error(error.response?.data?.error ?? error.message)
     }
   }
 
@@ -77,9 +67,7 @@ const BlogForm = ({ blogs, setBlogs, showNotification }) => {
 }
 
 BlogForm.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired,
+  handleCreateBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm
