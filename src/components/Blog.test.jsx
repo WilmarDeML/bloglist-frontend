@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, expect } from 'vitest'
 
 import Blog from './Blog'
 
 describe('<Blog />', () => {
   let container
+  const mockHandler = vi.fn()
 
   beforeEach(() => {
     container = render(
@@ -14,7 +14,7 @@ describe('<Blog />', () => {
         author: 'wilmar',
         url: 'https://testing-library.com/docs/react-testing-library/intro',
         likes: 5
-      }} blogs={[]} setBlogs={() => {}} showNotification={() => {}} />
+      }} blogs={[]} handleUpdateLikes={mockHandler} handleRemoveBlog={() => {}} />
     ).container
   })
 
@@ -35,5 +35,18 @@ describe('<Blog />', () => {
 
     const div = container.querySelector('.blog-complement')
     expect(div).not.toHaveStyle('display: none')
+  })
+
+  test('clicking the button calls event handler once', async () => {
+    const user = userEvent.setup()
+
+    const buttonView = screen.getByText('view')
+    await user.click(buttonView)
+
+    const buttonLike = screen.getByText('like')
+    await user.click(buttonLike)
+    await user.click(buttonLike)
+
+    expect(mockHandler.mock.calls).toHaveLength(2)
   })
 })
