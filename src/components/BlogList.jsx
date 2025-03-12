@@ -16,13 +16,15 @@ const BlogList = (props) => {
 
       <BlogForm handleCreateBlog={props.createBlog} />
 
-      {props.blogs.map(blog =>
-        <Blog key={blog.id}
-          blog={blog}
-          handleUpdateLikes={props.updateLikes}
-          handleRemoveBlog={props.removeBlog}
-        />
-      )}
+      <ul className='blogs'>
+        {props.blogs.map(blog =>
+          <Blog key={blog.id}
+            blog={blog}
+            handleUpdateLikes={props.updateLikes}
+            handleRemoveBlog={props.removeBlog}
+          />
+        )}
+      </ul>
     </div>
   )
 }

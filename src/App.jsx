@@ -65,11 +65,11 @@ const App = () => {
     setTimeout(() => setNotificationMessage(''), 5000)
   }
 
-  const handleCreateBlog = async (blog, noteFormRef) => {
+  const handleCreateBlog = async (blog, blogFormRef) => {
     try {
       const createdBlog = await blogService.create(blog)
 
-      noteFormRef.current.toggleVisibility()
+      blogFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(createdBlog))
       showNotification(`a new blog '${blog.title}' added`)

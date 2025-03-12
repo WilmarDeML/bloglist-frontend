@@ -11,7 +11,7 @@ const BlogForm = ({ handleCreateBlog }) => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  const noteFormRef = useRef(null)
+  const blogFormRef = useRef(null)
 
   const handleBlogSubmit = async (event) => {
     event.preventDefault()
@@ -20,7 +20,7 @@ const BlogForm = ({ handleCreateBlog }) => {
       title, author, url
     }
 
-    if (await handleCreateBlog(blog, noteFormRef)) {
+    if (await handleCreateBlog(blog, blogFormRef)) {
       setTitle('')
       setAuthor('')
       setUrl('')
@@ -28,7 +28,7 @@ const BlogForm = ({ handleCreateBlog }) => {
   }
 
   return (
-    <Togglable buttonLabel="new blog" ref={noteFormRef}>
+    <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <form onSubmit={handleBlogSubmit}>
         <h2>create new</h2>
         <div style={{ display: 'flex', gap: .5 +'em' }}>
