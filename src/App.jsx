@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 
 import loginService from './services/login'
 
@@ -6,13 +7,15 @@ import BlogList from './components/BlogList'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 
+import { setNotification } from './reducers/notificationReducer'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [notificationMessage, setNotificationMessage] = useState('')
-  const [error, setError] = useState(false)
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedNoteappUser')
@@ -49,7 +52,7 @@ const App = () => {
 
     } catch (err) {
       const errorMessage = err.response?.data?.error ?? 'server error, please try again'
-      showNotification(errorMessage, err)
+      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
       console.error(err.response?.data?.error ?? err.message)
     }
   }
@@ -59,12 +62,6 @@ const App = () => {
     setUser(null)
   }
 
-  const showNotification = (message, err) => {
-    setNotificationMessage(message)
-    setError(err)
-    setTimeout(() => setNotificationMessage(''), 5000)
-  }
-
   const handleCreateBlog = async (blog, blogFormRef) => {
     try {
       const createdBlog = await blogService.create(blog)
@@ -72,11 +69,11 @@ const App = () => {
       blogFormRef.current.toggleVisibility()
 
       setBlogs(blogs.concat(createdBlog))
-      showNotification(`a new blog '${blog.title}' added`)
+      dispatch(setNotification({ message: `a new blog '${blog.title}' added` }, 5000))
       return true
     } catch (error) {
       const errorMessage = error.response?.data?.error ?? 'error saving the blog'
-      showNotification(errorMessage, error)
+      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
       console.error(error.response?.data?.error ?? error.message)
       return false
     }
@@ -88,7 +85,7 @@ const App = () => {
       setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
     } catch (error) {
       const errorMessage = error.response?.data?.error ?? 'error updating likes'
-      showNotification(errorMessage, error)
+      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
       console.error(error.response?.data?.error ?? error.message)
     }
   }
@@ -104,7 +101,7 @@ const App = () => {
       setBlogs(updatedBlogs)
     } catch (error) {
       const errorMessage = error.response?.data?.error ?? 'error removing blog'
-      showNotification(errorMessage, error)
+      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
       console.error(error.response?.data?.error ?? error.message)
     }
   }
@@ -114,8 +111,6 @@ const App = () => {
       <LoginForm handleLogin={handleLogin}
         username={username} setUsername={setUsername}
         password={password} setPassword={setPassword}
-        error={error}
-        notificationMessage={notificationMessage}
       />
     )
   }
@@ -123,13 +118,10 @@ const App = () => {
   return (
     <BlogList blogs={blogs.sort((a, b) => b.likes - a.likes)}
       createBlog={handleCreateBlog}
-      error={error}
       logout={handleLogout}
       name={user.name}
-      notificationMessage={notificationMessage}
       removeBlog={handleRemoveBlog}
       setBlogs={setBlogs}
-      showNotification={showNotification}
       updateLikes={handleUpdateLikes}
     />
   )
