@@ -2,15 +2,14 @@ import { useState, useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 
 import loginService from './services/login'
+import blogService from './services/blogs'
 
 import BlogList from './components/BlogList'
-import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 
 import { setNotification } from './reducers/notificationReducer'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
@@ -24,13 +23,6 @@ const App = () => {
       blogService.setToken(user.token)
       setUser(user)
     }
-  }, [])
-
-  useEffect(() => {
-    const getAll = async () => {
-      setBlogs( await blogService.getAll() )
-    }
-    getAll()
   }, [])
 
   const handleLogin = async (event) => {
@@ -62,50 +54,6 @@ const App = () => {
     setUser(null)
   }
 
-  const handleCreateBlog = async (blog, blogFormRef) => {
-    try {
-      const createdBlog = await blogService.create(blog)
-
-      blogFormRef.current.toggleVisibility()
-
-      setBlogs(blogs.concat(createdBlog))
-      dispatch(setNotification({ message: `a new blog '${blog.title}' added` }, 5000))
-      return true
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error saving the blog'
-      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
-      console.error(error.response?.data?.error ?? error.message)
-      return false
-    }
-  }
-
-  const handleUpdateLikes = async (blog) => {
-    try {
-      const updatedBlog = await blogService.update(blog.id, { likes: blog.likes + 1 })
-      setBlogs(blogs.map(b => b.id === blog.id ? updatedBlog : b))
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error updating likes'
-      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
-      console.error(error.response?.data?.error ?? error.message)
-    }
-  }
-
-  const handleRemoveBlog = async (blog) => {
-    if (!window.confirm(`remove blog '${blog.title}'?`)) {
-      return
-    }
-
-    try {
-      await blogService.remove(blog.id)
-      const updatedBlogs = blogs.filter(b => b.id !== blog.id)
-      setBlogs(updatedBlogs)
-    } catch (error) {
-      const errorMessage = error.response?.data?.error ?? 'error removing blog'
-      dispatch(setNotification({ message: errorMessage, error: true }, 5000))
-      console.error(error.response?.data?.error ?? error.message)
-    }
-  }
-
   if (!user) {
     return (
       <LoginForm handleLogin={handleLogin}
@@ -116,13 +64,9 @@ const App = () => {
   }
 
   return (
-    <BlogList blogs={blogs.sort((a, b) => b.likes - a.likes)}
-      createBlog={handleCreateBlog}
+    <BlogList
       logout={handleLogout}
       name={user.name}
-      removeBlog={handleRemoveBlog}
-      setBlogs={setBlogs}
-      updateLikes={handleUpdateLikes}
     />
   )
 }

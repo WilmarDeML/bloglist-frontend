@@ -1,11 +1,12 @@
 import { useState, useRef } from 'react'
-import PropTypes from 'prop-types'
+import { useDispatch } from 'react-redux'
 
-import blogService from '../services/blogs'
+import { createBlog } from '../reducers/blogReducer'
 
 import Togglable from './Togglable'
 
-const BlogForm = ({ handleCreateBlog }) => {
+const BlogForm = () => {
+  const dispatch = useDispatch()
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -13,18 +14,13 @@ const BlogForm = ({ handleCreateBlog }) => {
 
   const blogFormRef = useRef(null)
 
-  const handleBlogSubmit = async (event) => {
+  const handleBlogSubmit = (event) => {
     event.preventDefault()
 
-    const blog = {
-      title, author, url
-    }
-
-    if (await handleCreateBlog(blog, blogFormRef)) {
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    }
+    dispatch(createBlog({ title, author, url }))
+    setTitle('')
+    setAuthor('')
+    setUrl('')
   }
 
   return (
@@ -67,10 +63,6 @@ const BlogForm = ({ handleCreateBlog }) => {
       </form>
     </Togglable>
   )
-}
-
-BlogForm.propTypes = {
-  handleCreateBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm

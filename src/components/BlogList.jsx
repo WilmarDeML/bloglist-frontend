@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types'
+import { useSelector } from 'react-redux'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Notification from './Notification'
 
 const BlogList = (props) => {
+  const blogs = useSelector(state => state.blogs)
 
   return (
     <div>
@@ -14,29 +16,18 @@ const BlogList = (props) => {
 
       <p>{props.name} logged in <button onClick={props.logout}>logout</button></p>
 
-      <BlogForm handleCreateBlog={props.createBlog} />
+      <BlogForm />
 
       <ul className='blogs'>
-        {props.blogs.map(blog =>
-          <Blog key={blog.id}
-            blog={blog}
-            handleUpdateLikes={props.updateLikes}
-            handleRemoveBlog={props.removeBlog}
-          />
-        )}
+        {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
       </ul>
     </div>
   )
 }
 
 BlogList.propTypes = {
-  blogs: PropTypes.array.isRequired,
-  createBlog: PropTypes.func.isRequired,
   logout: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  removeBlog: PropTypes.func.isRequired,
-  setBlogs: PropTypes.func.isRequired,
-  updateLikes: PropTypes.func.isRequired,
 }
 
 export default BlogList
