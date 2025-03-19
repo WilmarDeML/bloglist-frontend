@@ -1,63 +1,41 @@
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
 import { useDispatch } from 'react-redux'
-
+import { useField } from '../hooks'
 import { createBlog } from '../reducers/blogReducer'
-
 import Togglable from './Togglable'
 
 const BlogForm = () => {
-  const dispatch = useDispatch()
-
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const blogFormRef = useRef(null)
+  const dispatch = useDispatch()
+  const {reset:resetTitle, ...title} = useField('text', 'title')
+  const {reset:resetAuthor, ...author} = useField('text', 'author')
+  const {reset:resetUrl, ...url} = useField('text', 'url')
 
   const handleBlogSubmit = (event) => {
     event.preventDefault()
-
-    dispatch(createBlog({ title, author, url }))
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    dispatch(createBlog({ title: title.value, author: author.value, url: url.value }))
+    resetTitle('')
+    resetAuthor('')
+    resetUrl('')
   }
+
+  const styleDiv = { display: 'flex', gap: `${.5}em` }
 
   return (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <form onSubmit={handleBlogSubmit}>
         <h2>create new</h2>
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="title">title</label>
-          <input
-            type="text"
-            value={title}
-            name="Username"
-            onChange={({ target }) => setTitle(target.value)}
-            placeholder="write a title..."
-          />
+          <input {...title} placeholder="write a title..." />
         </div>
-
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="author">author</label>
-          <input
-            type="text"
-            value={author}
-            name="Username"
-            onChange={({ target }) => setAuthor(target.value)}
-            placeholder="write an author..."
-          />
+          <input {...author} placeholder="write an author..." />
         </div>
-
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="url">url</label>
-          <input
-            type="text"
-            value={url}
-            name="Username"
-            onChange={({ target }) => setUrl(target.value)}
-            placeholder="write a url..."
-          />
+          <input {...url} placeholder="write a url..." />
         </div>
         <button type="submit">create</button>
       </form>

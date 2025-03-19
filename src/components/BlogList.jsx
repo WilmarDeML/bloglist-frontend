@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+
+import { logout } from '../reducers/userReducer'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Notification from './Notification'
 
-const BlogList = (props) => {
+const BlogList = () => {
   const blogs = useSelector(state => state.blogs)
+  const user = useSelector(state => state.user)
+  const dispatch = useDispatch()
 
   return (
     <div>
@@ -14,7 +18,7 @@ const BlogList = (props) => {
 
       <Notification />
 
-      <p>{props.name} logged in <button onClick={props.logout}>logout</button></p>
+      <p>{user?.name} logged in <button onClick={() => dispatch(logout())}>logout</button></p>
 
       <BlogForm />
 

@@ -1,42 +1,36 @@
+import { useDispatch } from 'react-redux'
+import { useField } from '../hooks'
+import { login } from '../reducers/userReducer'
 import Notification from './Notification'
-import PropTypes from 'prop-types'
 
-const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }) => (
-  <form onSubmit={handleLogin}>
-    <h2>log in to application</h2>
+const LoginForm = () => {
+  const {reset:resetUsername, ...username} = useField('text', 'username')
+  const {reset:resetPass, ...password} = useField('password', 'password')
 
-    <Notification />
+  const dispatch = useDispatch()
 
-    <div style={{ display: 'flex', gap: .5 +'em' }}>
-      <label htmlFor="username">username</label>
-      <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
-        data-testid="username"
-      />
-    </div>
-    <div style={{ display: 'flex', gap: .5 +'em' }}>
-      <label htmlFor="password">password</label>
-      <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
-        data-testid="password"
-      />
-    </div>
-    <button type="submit">login</button>
-  </form>
-)
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    dispatch(login({ username: username.value, password: password.value }))
+    resetUsername('')
+    resetPass('')
+  }
 
-LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired
+  return (
+    <form onSubmit={handleLogin}>
+      <h2>log in to application</h2>  
+      <Notification />  
+      <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <label htmlFor="username">username</label>
+        <input {...username} data-testid="username" />
+      </div>
+      <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <label htmlFor="password">password</label>
+        <input {...password} data-testid="password" />
+      </div>
+      <button type="submit">login</button>
+    </form>
+  )
 }
 
 export default LoginForm

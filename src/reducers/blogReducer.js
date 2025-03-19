@@ -1,8 +1,6 @@
-import { createSlice, current } from "@reduxjs/toolkit"
-
-import blogService from "../services/blogs"
-
-import { setNotification } from "./notificationReducer"
+import { createSlice, current } from '@reduxjs/toolkit'
+import blogService from '../services/blogs'
+import { setNotification } from './notificationReducer'
 
 const initialState = []
 
@@ -18,7 +16,7 @@ const toggleLikes = (state, id) => {
 }
 
 const blogSlice = createSlice({
-  name: "blogs",
+  name: 'blogs',
   initialState,
   reducers: {
     appendBlog(state, action) {
@@ -41,50 +39,59 @@ export const { toggleLikesOf, setBlogs, appendBlog, removeBlog } =
 
 export const initializeBlogs = () => {
   return async (dispatch) => {
-    const blogs = await blogService.getAll()
-    dispatch(setBlogs(blogs))
+    dispatch(setBlogs(await blogService.getAll()))
   }
 }
 
 export const createBlog = (blog) => {
   return async (dispatch) => {
-    const newBlog = await blogService.create(blog)
-    await dispatch(appendBlog(newBlog))
-    await dispatch(
-      setNotification(
-        { message: `You created '${newBlog.title}'`, error: false },
-        5000
+    try {
+      const newBlog = await blogService.create(blog)
+      dispatch(appendBlog(newBlog))
+      dispatch(
+        setNotification(
+          { message: `You created '${newBlog.title}'`, error: false },
+          5000
+        )
       )
-    )
+    } catch (error) {
+      const message =
+        error.response?.data?.error ?? 'server error, please try again'
+      dispatch(setNotification({ message, error: true }, 5000))
+    }
   }
 }
 
 export const toggleLikesOfBlog = (id) => {
   return async (dispatch, getState) => {
     const blogFound = getState().blogs.find((blog) => blog.id === id)
-    const updatedBlog = await blogService.update(id, {
-      likes: blogFound.likes + 1,
-    })
-    await dispatch(toggleLikesOf(id))
-    await dispatch(
-      setNotification(
-        { message: `You liked '${updatedBlog.title}'`, error: false },
-        5000
-      )
-    )
+    try {
+      await blogService.update(id, { likes: blogFound.likes + 1 })
+      dispatch(toggleLikesOf(id))
+    } catch (error) {
+      const message =
+        error.response?.data?.error ?? 'server error, please try again'
+      dispatch(setNotification({ message, error: true }, 5000))
+    }
   }
 }
 
 export const deleteBlog = (blog) => {
   return async (dispatch) => {
-    await blogService.remove(blog.id)
-    await dispatch(removeBlog(blog.id))
-    await dispatch(
-      setNotification(
-        { message: `You deleted '${blog.title}'`, error: false },
-        5000
+    try {
+      await blogService.remove(blog.id)
+      dispatch(removeBlog(blog.id))
+      dispatch(
+        setNotification(
+          { message: `You deleted '${blog.title}'`, error: false },
+          5000
+        )
       )
-    )
+    } catch (error) {
+      const message =
+        error.response?.data?.error ?? 'server error, please try again'
+      dispatch(setNotification({ message, error: true }, 5000))
+    }
   }
 }
 
