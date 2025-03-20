@@ -1,7 +1,44 @@
-import Notification from './Notification'
-import PropTypes from 'prop-types'
+import { useMutation } from '@tanstack/react-query'
+import { useState } from 'react'
 
-const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }) => (
+import { useLogin } from '../UserContext'
+import { useNotificationWithTime } from '../NotificationContext'
+
+import loginService from '../services/login'
+
+import Notification from './Notification'
+
+const LoginForm = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+
+  const notificationWithTime = useNotificationWithTime()
+  const login = useLogin()  
+
+  const handleError = (error) => {
+    const errorMessage = error.response?.data?.error ?? 'error in server, try again later'
+    notificationWithTime({ message: errorMessage, error: true }, 5000)
+    console.error(error.response?.data?.error ?? error.message)
+  }
+
+  const loginUserInState = (user) => {
+    login(user)
+    setUsername('')
+    setPassword('')
+  }
+
+  const userLoginMutation = useMutation({
+    mutationFn: loginService.login,
+    onSuccess: loginUserInState,
+    onError: handleError
+  })
+
+  const handleLogin = async (event) => {
+    event.preventDefault()
+    userLoginMutation.mutate({ username, password })
+  }
+
+  return (
   <form onSubmit={handleLogin}>
     <h2>log in to application</h2>
 
@@ -29,14 +66,6 @@ const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }
     </div>
     <button type="submit">login</button>
   </form>
-)
-
-LoginForm.propTypes = {
-  handleLogin: PropTypes.func.isRequired,
-  username: PropTypes.string.isRequired,
-  setUsername: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  setPassword: PropTypes.func.isRequired,
-}
+)}
 
 export default LoginForm

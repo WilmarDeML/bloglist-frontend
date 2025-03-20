@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query'
-import PropTypes from 'prop-types'
 
+import { useLogout, useUserValue } from '../UserContext'
 import blogService from '../services/blogs'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Notification from './Notification'
 
-const BlogList = (props) => {
+const BlogList = () => {
+
+  const logout = useLogout()
+  const user = useUserValue()
 
   const result = useQuery({
     queryKey: ['blogs'],
@@ -26,7 +29,7 @@ const BlogList = (props) => {
     <div>
       <h2>blogs</h2>
       <Notification />
-      <p>{props.name} logged in <button onClick={props.logout}>logout</button></p>
+      <p>{user.name} logged in <button onClick={logout}>logout</button></p>
       <BlogForm />
 
       <ul className='blogs'>
@@ -38,11 +41,6 @@ const BlogList = (props) => {
       </ul>
     </div>
   )
-}
-
-BlogList.propTypes = {
-  logout: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
 }
 
 export default BlogList
