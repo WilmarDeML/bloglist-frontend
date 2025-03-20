@@ -1,5 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { useState, useRef } from 'react'
+import { useRef } from 'react'
+
+import { useField } from '../hooks'
 
 import blogService from '../services/blogs'
 import { useNotificationWithTime } from '../NotificationContext'
@@ -10,9 +12,9 @@ const BlogForm = () => {
   const queryClient = useQueryClient()
   const notificationWithTime = useNotificationWithTime()
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  const {reset:resetTitle, ...title} = useField('text', 'title')
+  const {reset:resetAuthor, ...author} = useField('text', 'author')
+  const {reset:resetUrl, ...url} = useField('text', 'url')
 
   const blogFormRef = useRef(null)
 
@@ -27,9 +29,9 @@ const BlogForm = () => {
     queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
     blogFormRef.current.toggleVisibility()
     notificationWithTime({ message: `a new blog '${newBlog.title}' added`, error: false }, 5000)
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    resetTitle('')
+    resetAuthor('')
+    resetUrl('')
   }
 
   const newBlogMutation = useMutation({
@@ -40,44 +42,30 @@ const BlogForm = () => {
 
   const handleBlogSubmit = async (event) => {
     event.preventDefault()
-    newBlogMutation.mutate({ title, author, url })
+    newBlogMutation.mutate({ 
+      title: title.value, 
+      author: author.value, 
+      url: url.value 
+    })
   }
+
+  const styleDiv = { display: 'flex', gap: `${.5}em` }
 
   return (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
       <form onSubmit={handleBlogSubmit}>
         <h2>create new</h2>
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="title">title</label>
-          <input
-            type="text"
-            value={title}
-            name="Username"
-            onChange={({ target }) => setTitle(target.value)}
-            placeholder="write a title..."
-          />
+          <input id='title' {...title} placeholder="write a title..." />
         </div>
-
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="author">author</label>
-          <input
-            type="text"
-            value={author}
-            name="Username"
-            onChange={({ target }) => setAuthor(target.value)}
-            placeholder="write an author..."
-          />
+          <input id='author' {...author} placeholder="write an author..." />
         </div>
-
-        <div style={{ display: 'flex', gap: .5 +'em' }}>
+        <div style={styleDiv}>
           <label htmlFor="url">url</label>
-          <input
-            type="text"
-            value={url}
-            name="Username"
-            onChange={({ target }) => setUrl(target.value)}
-            placeholder="write a url..."
-          />
+          <input id='url' {...url} placeholder="write a url..." />
         </div>
         <button type="submit">create</button>
       </form>

@@ -1,16 +1,17 @@
 import { useMutation } from '@tanstack/react-query'
-import { useState } from 'react'
 
 import { useLogin } from '../UserContext'
 import { useNotificationWithTime } from '../NotificationContext'
+
+import { useField } from '../hooks'
 
 import loginService from '../services/login'
 
 import Notification from './Notification'
 
 const LoginForm = () => {
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
+  const {reset:resetUsername, ...username} = useField('text', 'username')
+  const {reset:resetPass, ...password} = useField('password', 'password')
 
   const notificationWithTime = useNotificationWithTime()
   const login = useLogin()  
@@ -23,8 +24,8 @@ const LoginForm = () => {
 
   const loginUserInState = (user) => {
     login(user)
-    setUsername('')
-    setPassword('')
+    resetUsername('')
+    resetPass('')
   }
 
   const userLoginMutation = useMutation({
@@ -35,37 +36,25 @@ const LoginForm = () => {
 
   const handleLogin = async (event) => {
     event.preventDefault()
-    userLoginMutation.mutate({ username, password })
+    userLoginMutation.mutate({ username: username.value, password: password.value })
   }
 
+  const styleDiv = { display: 'flex', gap: `${.5}em` }
+
   return (
-  <form onSubmit={handleLogin}>
-    <h2>log in to application</h2>
-
-    <Notification />
-
-    <div style={{ display: 'flex', gap: .5 +'em' }}>
-      <label htmlFor="username">username</label>
-      <input
-        type="text"
-        value={username}
-        name="Username"
-        onChange={({ target }) => setUsername(target.value)}
-        data-testid="username"
-      />
-    </div>
-    <div style={{ display: 'flex', gap: .5 +'em' }}>
-      <label htmlFor="password">password</label>
-      <input
-        type="password"
-        value={password}
-        name="Password"
-        onChange={({ target }) => setPassword(target.value)}
-        data-testid="password"
-      />
-    </div>
-    <button type="submit">login</button>
-  </form>
+    <form onSubmit={handleLogin}>
+      <h2>log in to application</h2>  
+      <Notification />  
+      <div style={styleDiv}>
+        <label htmlFor="username">username</label>
+        <input id='username' {...username} data-testid="username" autoComplete='true' />
+      </div>
+      <div style={styleDiv}>
+        <label htmlFor="password">password</label>
+        <input id='password' {...password} data-testid="password" />
+      </div>
+      <button type="submit">login</button>
+    </form>
 )}
 
 export default LoginForm
