@@ -27,15 +27,15 @@ const BlogForm = () => {
         <h2>create new</h2>
         <div style={styleDiv}>
           <label htmlFor="title">title</label>
-          <input {...title} placeholder="write a title..." />
+          <input id='title' {...title} placeholder="write a title..." />
         </div>
         <div style={styleDiv}>
           <label htmlFor="author">author</label>
-          <input {...author} placeholder="write an author..." />
+          <input id='author' {...author} placeholder="write an author..." />
         </div>
         <div style={styleDiv}>
           <label htmlFor="url">url</label>
-          <input {...url} placeholder="write a url..." />
+          <input id='url' {...url} placeholder="write a url..." />
         </div>
         <button type="submit">create</button>
       </form>
