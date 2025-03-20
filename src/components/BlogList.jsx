@@ -1,16 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { useLogout, useUserValue } from '../UserContext'
 import blogService from '../services/blogs'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 import Notification from './Notification'
+import Menu from './Menu'
 
 const BlogList = () => {
-
-  const logout = useLogout()
-  const user = useUserValue()
 
   const result = useQuery({
     queryKey: ['blogs'],
@@ -29,7 +26,7 @@ const BlogList = () => {
     <div>
       <h2>blogs</h2>
       <Notification />
-      <p>{user.name} logged in <button onClick={logout}>logout</button></p>
+      <Menu />
       <BlogForm />
 
       <ul className='blogs'>
