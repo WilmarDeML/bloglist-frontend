@@ -22,11 +22,11 @@ const LoginForm = () => {
       <Notification />  
       <div style={{ display: 'flex', gap: .5 +'em' }}>
         <label htmlFor="username">username</label>
-        <input {...username} data-testid="username" />
+        <input id='username' {...username} data-testid="username" autoComplete='true' />
       </div>
       <div style={{ display: 'flex', gap: .5 +'em' }}>
         <label htmlFor="password">password</label>
-        <input {...password} data-testid="password" />
+        <input id='password' {...password} data-testid="password" />
       </div>
       <button type="submit">login</button>
     </form>
