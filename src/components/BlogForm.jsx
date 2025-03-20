@@ -1,11 +1,14 @@
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useState, useRef } from 'react'
-import PropTypes from 'prop-types'
 
 import blogService from '../services/blogs'
+import { useNotificationWithTime } from '../NotificationContext'
 
 import Togglable from './Togglable'
 
-const BlogForm = ({ handleCreateBlog }) => {
+const BlogForm = () => {
+  const queryClient = useQueryClient()
+  const notificationWithTime = useNotificationWithTime()
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -13,18 +16,31 @@ const BlogForm = ({ handleCreateBlog }) => {
 
   const blogFormRef = useRef(null)
 
+  const handleError = (error) => {
+    const errorMessage = error.response?.data?.error ?? 'error in server, try again later'
+    notificationWithTime({ message: errorMessage, error: true }, 5000)
+    console.error(error.response?.data?.error ?? error.message)
+  }
+
+  const addNewBlogInState = (newBlog) => {
+    const blogs = queryClient.getQueryData(['blogs'])
+    queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
+    blogFormRef.current.toggleVisibility()
+    notificationWithTime({ message: `a new blog '${newBlog.title}' added`, error: false }, 5000)
+    setTitle('')
+    setAuthor('')
+    setUrl('')
+  }
+
+  const newBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: addNewBlogInState,
+    onError: handleError
+  })
+
   const handleBlogSubmit = async (event) => {
     event.preventDefault()
-
-    const blog = {
-      title, author, url
-    }
-
-    if (await handleCreateBlog(blog, blogFormRef)) {
-      setTitle('')
-      setAuthor('')
-      setUrl('')
-    }
+    newBlogMutation.mutate({ title, author, url })
   }
 
   return (
@@ -67,10 +83,6 @@ const BlogForm = ({ handleCreateBlog }) => {
       </form>
     </Togglable>
   )
-}
-
-BlogForm.propTypes = {
-  handleCreateBlog: PropTypes.func.isRequired,
 }
 
 export default BlogForm
