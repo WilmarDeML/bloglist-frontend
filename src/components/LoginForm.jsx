@@ -1,11 +1,11 @@
 import Notification from './Notification'
 import PropTypes from 'prop-types'
 
-const LoginForm = ({ handleLogin, username, setUsername, password, setPassword, error, notificationMessage }) => (
+const LoginForm = ({ handleLogin, username, setUsername, password, setPassword }) => (
   <form onSubmit={handleLogin}>
     <h2>log in to application</h2>
 
-    <Notification message={notificationMessage} err={error} />
+    <Notification />
 
     <div style={{ display: 'flex', gap: .5 +'em' }}>
       <label htmlFor="username">username</label>
@@ -37,8 +37,6 @@ LoginForm.propTypes = {
   setUsername: PropTypes.func.isRequired,
   password: PropTypes.string.isRequired,
   setPassword: PropTypes.func.isRequired,
-  error: PropTypes.bool,
-  notificationMessage: PropTypes.string,
 }
 
 export default LoginForm

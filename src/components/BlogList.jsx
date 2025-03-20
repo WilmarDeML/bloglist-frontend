@@ -10,7 +10,7 @@ const BlogList = (props) => {
     <div>
       <h2>blogs</h2>
 
-      <Notification message={props.notificationMessage} err={props.error} />
+      <Notification />
 
       <p>{props.name} logged in <button onClick={props.logout}>logout</button></p>
 
@@ -32,13 +32,10 @@ const BlogList = (props) => {
 BlogList.propTypes = {
   blogs: PropTypes.array.isRequired,
   createBlog: PropTypes.func.isRequired,
-  error: PropTypes.bool,
   logout: PropTypes.func.isRequired,
   name: PropTypes.string.isRequired,
-  notificationMessage: PropTypes.string,
   removeBlog: PropTypes.func.isRequired,
   setBlogs: PropTypes.func.isRequired,
-  showNotification: PropTypes.func.isRequired,
   updateLikes: PropTypes.func.isRequired,
 }
 
