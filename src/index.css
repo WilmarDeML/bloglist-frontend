@@ -22,15 +22,15 @@
   margin-bottom: .5em;
 
   button {
-    margin-left: .3em;
     border-radius: .5em;
 
     &:hover {
       background: lightgrey;
     }
   }
-
+  
   .button-remove {
+    margin-bottom: .3em;
     background: cornflowerblue;
     color: midnightblue;
   }
