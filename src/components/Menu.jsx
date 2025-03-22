@@ -18,11 +18,14 @@ const Menu = () => {
   }
 
   return (
-    <div style={styleDiv}>
-      <Link to='/' style={padding}>blogs</Link>
-      <Link to='/users' style={padding}>users</Link>
-      <span>{user.name} logged in <button onClick={logout}>logout</button></span>
-    </div>
+    <>
+      <div style={styleDiv}>
+        <Link to='/' style={padding}>blogs</Link>
+        <Link to='/users' style={padding}>users</Link>
+        <span>{user.name} logged in <button onClick={logout}>logout</button></span>
+      </div>
+      <h2>blog app</h2>
+    </>
   )
 }
 
