@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query"
 import { useMatch } from "react-router-dom"
 import userService from '../services/users'
 
+import { Container } from "./BlogDetail"
+
 const User = () => {
   const match = useMatch('/users/:id')
 
@@ -21,7 +23,7 @@ const User = () => {
   if ( !user ) return
 
   return (
-    <div className="user">
+    <Container className="user">
       <h1>{user.name}</h1>
       <h2>added blogs</h2>
       <ul>
@@ -34,7 +36,7 @@ const User = () => {
           : <h4>no blogs added</h4>
         }
       </ul>
-    </div>
+    </Container>
   )
 }
 

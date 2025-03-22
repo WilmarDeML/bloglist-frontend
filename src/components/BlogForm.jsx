@@ -7,6 +7,7 @@ import blogService from '../services/blogs'
 import { useNotificationWithTime } from '../NotificationContext'
 
 import Togglable from './Togglable'
+import { ContainerForm, Container, Subtitle, Input, Button } from '../styles/global'
 
 const BlogForm = () => {
   const queryClient = useQueryClient()
@@ -49,26 +50,24 @@ const BlogForm = () => {
     })
   }
 
-  const styleDiv = { display: 'flex', gap: `${.5}em` }
-
   return (
     <Togglable buttonLabel="new blog" ref={blogFormRef}>
-      <form onSubmit={handleBlogSubmit}>
-        <h2>create new</h2>
-        <div style={styleDiv}>
+      <ContainerForm onSubmit={handleBlogSubmit}>
+        <Subtitle>create new</Subtitle>
+        <Container>
           <label htmlFor="title">title</label>
-          <input id='title' {...title} placeholder="write a title..." />
-        </div>
-        <div style={styleDiv}>
+          <Input id='title' {...title} placeholder="write a title..." />
+        </Container>
+        <Container>
           <label htmlFor="author">author</label>
-          <input id='author' {...author} placeholder="write an author..." />
-        </div>
-        <div style={styleDiv}>
+          <Input id='author' {...author} placeholder="write an author..." />
+        </Container>
+        <Container>
           <label htmlFor="url">url</label>
-          <input id='url' {...url} placeholder="write a url..." />
-        </div>
-        <button type="submit">create</button>
-      </form>
+          <Input id='url' {...url} placeholder="write a url..." />
+        </Container>
+        <Button type="submit">create</Button>
+      </ContainerForm>
     </Togglable>
   )
 }

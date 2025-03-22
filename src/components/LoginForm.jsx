@@ -1,3 +1,4 @@
+import { Input, Button, ContainerForm, Container } from '../styles/global'
 import { useMutation } from '@tanstack/react-query'
 
 import { useLogin } from '../UserContext'
@@ -39,22 +40,21 @@ const LoginForm = () => {
     userLoginMutation.mutate({ username: username.value, password: password.value })
   }
 
-  const styleDiv = { display: 'flex', gap: `${.5}em` }
 
   return (
-    <form onSubmit={handleLogin}>
-      <h2>log in to application</h2>  
+    <ContainerForm onSubmit={handleLogin}>
+      <h2>Log in to application</h2>  
       <Notification />  
-      <div style={styleDiv}>
+      <Container>
         <label htmlFor="username">username</label>
-        <input id='username' {...username} data-testid="username" autoComplete='true' />
-      </div>
-      <div style={styleDiv}>
+        <Input id='username' {...username} data-testid="username" autoComplete='true' />
+      </Container>
+      <Container>
         <label htmlFor="password">password</label>
-        <input id='password' {...password} data-testid="password" />
-      </div>
-      <button type="submit">login</button>
-    </form>
+        <Input id='password' {...password} data-testid="password" />
+      </Container>
+      <Button type="submit">Login</Button>
+    </ContainerForm>
 )}
 
 export default LoginForm

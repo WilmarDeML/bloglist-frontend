@@ -4,6 +4,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNotificationWithTime } from '../NotificationContext'
 import blogService from '../services/blogs'
 import CommentList from "./CommentList"
+import { Title, Button } from "../styles/global"
+import styled from "styled-components"
 
 const BlogDetail = () => {
   const match = useMatch('/blogs/:id')
@@ -71,16 +73,44 @@ const BlogDetail = () => {
 
   return (
     <>
-      <div className="blog">
-        <h1>{blog.title}</h1>
+      <Container>
+        <Title>{blog.title}</Title>
         <p>{blog.url}</p>
-        <p>{blog.likes} likes <button onClick={handleUpdateLikes}>like</button> </p>
+        <p>{blog.likes} likes <ButtonLike onClick={handleUpdateLikes}>like</ButtonLike> </p>
         <p>added by {blog.user?.name ?? 'anonymous'}</p>
-        <button style={showButtonRemove} className='button-remove' onClick={handleRemoveBlog}>remove</button>
-      </div>
+        <button style={showButtonRemove} onClick={handleRemoveBlog} className="remove">remove</button>
+      </Container>
       <CommentList blog={blog} />
     </>
   )
 }
 
 export default BlogDetail
+
+const ButtonLike = styled(Button)`
+  padding: 0.2em;
+  width: 100px;
+  background: transparent;
+`
+
+export const Container = styled.div`
+  padding: .5em 1em;
+  border: 1px solid #03045e;
+  margin: .5em 1em;
+
+  .remove {
+    font-family: Krona One, sans-serif;
+    background: #90e0ef;
+    border: 1px solid #03045e;
+    border-radius: 0.7em;
+    padding: 0.7em;
+    font-size: 1.2em;
+    cursor: pointer;
+
+    &:hover {
+      background: #0077b6;
+      color: #caf0f8;
+      cursor: pointer;
+    }
+  }
+`

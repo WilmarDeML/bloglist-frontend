@@ -1,12 +1,16 @@
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import { Link as LinkStyle } from '../styles/global'
+
 const Blog = ({ blog }) => {
+
+  const noDecoration = { textDecoration: 'none' }
   
-  return (
-    <div className="blog">
-      <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-    </div>
+  return (    
+    <Link style={noDecoration} to={`/blogs/${blog.id}`}>
+      <LinkStyle>{blog.title}</LinkStyle>
+    </Link>    
   )
 }
 

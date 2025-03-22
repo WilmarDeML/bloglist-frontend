@@ -2,6 +2,8 @@ import { useQuery } from '@tanstack/react-query'
 
 import blogService from '../services/blogs'
 
+import styled from 'styled-components'
+
 import Blog from './Blog'
 import BlogForm from './BlogForm'
 
@@ -24,11 +26,16 @@ const BlogList = () => {
     <div>
       <BlogForm />
 
-      <ul className='blogs'>
+      <Ul className='blogs'>
         {blogs.map(blog => <Blog key={blog.id} blog={blog} />)}
-      </ul>
+      </Ul>
     </div>
   )
 }
 
 export default BlogList
+
+const Ul = styled.ul`
+  list-style: none;
+  padding-inline-start: 0;
+`
