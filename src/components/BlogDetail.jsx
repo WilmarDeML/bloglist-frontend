@@ -3,7 +3,7 @@ import { useMatch, useNavigate } from "react-router-dom"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useNotificationWithTime } from '../NotificationContext'
 import blogService from '../services/blogs'
-import Menu from "./Menu"
+import CommentList from "./CommentList"
 
 const BlogDetail = () => {
   const match = useMatch('/blogs/:id')
@@ -55,7 +55,7 @@ const BlogDetail = () => {
   
   const blog = result.data.find(b => b.id === match?.params?.id)
   
-  if ( !blog ) return navigate('/')
+  if ( !blog ) return
   
   const handleUpdateLikes = () => updateLikesMutation.mutate({id: blog.id, blog: { likes: blog.likes + 1 }})
 
@@ -71,14 +71,14 @@ const BlogDetail = () => {
 
   return (
     <>
-      <Menu />
-      <div>
+      <div className="blog">
         <h1>{blog.title}</h1>
         <p>{blog.url}</p>
         <p>{blog.likes} likes <button onClick={handleUpdateLikes}>like</button> </p>
         <p>added by {blog.user?.name ?? 'anonymous'}</p>
         <button style={showButtonRemove} className='button-remove' onClick={handleRemoveBlog}>remove</button>
       </div>
+      <CommentList blog={blog} />
     </>
   )
 }

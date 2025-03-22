@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useMatch } from "react-router-dom"
 import userService from '../services/users'
-import Menu from "./Menu"
 
 const User = () => {
   const match = useMatch('/users/:id')
@@ -23,7 +22,6 @@ const User = () => {
 
   return (
     <div className="user">
-      <Menu />
       <h1>{user.name}</h1>
       <h2>added blogs</h2>
       <ul>

@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query'
 
 import userService from '../services/users'
 
-import Menu from './Menu'
 import { Link } from 'react-router-dom'
 
 const UserList = () => {
@@ -22,7 +21,6 @@ const UserList = () => {
 
   return (
     <div>
-      <Menu />
       <h2>Users</h2>
 
       <table className='users'>

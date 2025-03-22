@@ -14,7 +14,7 @@ const getAll = async () => {
 
 const addAuthorizationHeader = () => {
   return {
-    headers: { Authorization: token },
+    headers: { Authorization: token }
   }
 }
 
@@ -35,4 +35,9 @@ const remove = async (id) => {
   await axios.delete(`${baseUrl}/${id}`, config)
 }
 
-export default { getAll, create, update, remove, setToken }
+const createComment = async ({ blogId, text }) => {
+  const response = await axios.post(`${baseUrl}/${blogId}/comments`, { text })
+  return response.data
+}
+
+export default { getAll, create, update, remove, setToken, createComment }

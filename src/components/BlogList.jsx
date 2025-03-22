@@ -4,8 +4,6 @@ import blogService from '../services/blogs'
 
 import Blog from './Blog'
 import BlogForm from './BlogForm'
-import Notification from './Notification'
-import Menu from './Menu'
 
 const BlogList = () => {
 
@@ -24,8 +22,6 @@ const BlogList = () => {
 
   return (
     <div>
-      <Notification />
-      <Menu />
       <BlogForm />
 
       <ul className='blogs'>

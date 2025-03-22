@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useLogout, useUserValue } from '../UserContext'
+import Notification from './Notification'
 
 const Menu = () => {
 
@@ -25,6 +26,7 @@ const Menu = () => {
         <span>{user.name} logged in <button onClick={logout}>logout</button></span>
       </div>
       <h2>blog app</h2>
+      <Notification />
     </>
   )
 }
